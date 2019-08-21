@@ -36,14 +36,24 @@ RUN apt-get update && apt-get install -y --allow-downgrades --allow-change-held-
         libibverbs1 \
         ibverbs-providers
 
+RUN apt update && apt install -y cifs-utils 
+RUN apt-get install --assume-yes nfs-common
+RUN umask 000
+
 RUN if [[ "${PYTHON_VERSION}" == "3.6" ]]; then \
         apt-get install -y python${PYTHON_VERSION}-distutils; \
     fi
-RUN ln -s /usr/bin/python${PYTHON_VERSION} /usr/bin/python
+
+RUN rm /usr/bin/python3 /usr/bin/python
+RUN ln -s /usr/bin/python${PYTHON_VERSION} /usr/bin/python3
+RUN ln -s /usr/bin/python3 /usr/bin/python
+
+# RUN curl -O https://bootstrap.pypa.io/get-pip.py && \
+#     python get-pip.py && \
+#     rm get-pip.py
 
 RUN curl -O https://bootstrap.pypa.io/get-pip.py && \
-    python get-pip.py && \
-    rm get-pip.py
+    python get-pip.py
 
 # Install TensorFlow, Keras, PyTorch and MXNet
 RUN pip install future typing
@@ -96,6 +106,13 @@ RUN pip install requests
 RUN pip install regex
 RUN pip install tensorboardX 
 RUN pip install sentencepiece
+RUN pip install hdfs
+RUN pip install botocore
+RUN pip install fairseq
+RUN pip install ftfy 
+RUN pip install mock 
+RUN pip install ptvsd 
+RUN pip install pytest
 RUN pip install boto3==1.9
 RUN pip install nltk==3.3
 RUN pip install gensim==3.6.0
